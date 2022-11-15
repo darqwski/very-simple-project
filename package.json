@@ -1,6 +1,6 @@
 {
-  "name": "doggo",
-  "version": "0.0.0",
+  "name": "very-simple-project",
+  "version": "0.9.0",
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
@@ -61,8 +61,5 @@
     "webpack": "^4.44.2",
     "webpack-cli": "^3.3.12",
     "webpack-dev-server": "^3.11.0"
-  },
-  "jest": {
-    "verbose": true
   }
 }

@@ -6,7 +6,7 @@ const logger = require('morgan');
 var bodyParser = require('body-parser')
 
 const pagesRouter = require('./routes/static-pages');
-const databaseSaver = require('./routes/database-saver');
+const router = require('./routes/router');
 
 const app = express();
 
@@ -24,7 +24,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'public/img')));
 
 app.use('/', pagesRouter);
-app.use('/', databaseSaver);
+app.use('/', router);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
