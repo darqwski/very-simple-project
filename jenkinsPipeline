@@ -26,6 +26,7 @@ pipeline {
         stage('VersionUpgrade') {
             steps {
                 echo 'Version Upgrade'
+                sh 'chmod +x -R ${env.WORKSPACE}'
                 sh './version_upgrade.sh'
                 sh 'git config --global user.name "Jenkins Provider"'
                 sh 'git config --global user.email "jenkins@localhost:8080"'
