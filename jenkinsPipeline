@@ -1,0 +1,39 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Setup') {
+            steps {
+                echo 'Selecting proper branch'
+                sh 'git checkout branch-2'
+                echo 'NPM Version: '
+                sh 'npm -v'
+                sh 'npm install'
+            }
+        }
+        stage('Test') {
+            steps {
+                echo 'Testing..'
+                sh 'npm run test'
+            }
+        }
+        stage('Build') {
+            steps {
+                echo 'Building..'
+                sh 'npm run production-build'
+            }
+        }
+        stage('VersionUpgrade') {
+            steps {
+                echo 'Version Upgrade'
+                sh 'chmod 755 version_upgrade.sh'
+                sh './version_upgrade.sh'
+                sh 'git config --global user.name "Jenkins Provider"'
+                sh 'git config --global user.email "jenkins@localhost:8080"'
+                sh "git add version"
+                sh 'git commit -m "Jenkins Production Build $BUILD_NUMBER"'
+                sh 'git push'
+            }
+        }
+    }
+}

@@ -46,7 +46,7 @@ const SmartComponent: React.FC = () => {
     return (
         <div>
             <p>
-                Counter value is:
+                Counter value IS:
                 <strong data-testid="counter-value">{counter}</strong>
                 <br />
                 {isPrimary ? (
