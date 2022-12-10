@@ -2,19 +2,55 @@ pipeline {
     agent any
 
     stages {
-        stage('Build') {
+        stage('Setup') {
             steps {
-                echo 'Building..'
+                echo 'Selecting proper branch'
+                sh 'git checkout branch-2'
+                echo 'NPM Version: '
+                sh 'npm -v'
+                sh 'npm install'
             }
         }
         stage('Test') {
             steps {
                 echo 'Testing..'
+                sh 'npm run test'
             }
         }
-        stage('Deploy') {
+        stage('Build') {
             steps {
-                echo 'Deploying....'
+                echo 'Building..'
+                sh 'npm run production-build'
+            }
+        }
+        stage('VersionUpgrade') {
+            steps {
+                echo 'Version Upgrade'
+                sh "#!/bin/bash
+                    CURRENT_VERSION=`cat version`
+                    VERSION_UPGRADE="" # minor, major, revision
+                    echo $CURRENT_VERSION
+                    IFS='.'
+                    read -ra VERSION_PARTS <<< "$CURRENT_VERSION"
+
+                    MAJOR_VERSION=${VERSION_PARTS[0]}
+                    MINOR_VERSION=${VERSION_PARTS[1]}
+
+                    if [ "major" == "$VERSION_UPGRADE" ]; then
+                      MAJOR_VERSION=$(($MAJOR_VERSION+1))
+                    elif [ "minor" == "$VERSION_UPGRADE" ]; then
+                      MINOR_VERSION=$(($MINOR_VERSION+1))
+                    fi
+
+                    echo BUILD_VERSION = "$MAJOR_VERSION.$MINOR_VERSION.$BUILD_NUMBER"
+
+                    echo "$MAJOR_VERSION.$MINOR_VERSION.$BUILD_NUMBER" > version
+                "
+                git config --global user.name "Jenkins Provider"
+                git config --global user.email "jenkins@localhost:8080"
+                sh "git add version"
+                sh 'git commit -m "Jenkins Production Build $BUILD_NUMBER"'
+                sh 'git push'
             }
         }
     }
