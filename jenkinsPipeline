@@ -26,26 +26,7 @@ pipeline {
         stage('VersionUpgrade') {
             steps {
                 echo 'Version Upgrade'
-                sh "#!/bin/bash
-                    CURRENT_VERSION=`cat version`
-                    VERSION_UPGRADE="" # minor, major, revision
-                    echo $CURRENT_VERSION
-                    IFS='.'
-                    read -ra VERSION_PARTS <<< "$CURRENT_VERSION"
-
-                    MAJOR_VERSION=${VERSION_PARTS[0]}
-                    MINOR_VERSION=${VERSION_PARTS[1]}
-
-                    if [ "major" == "$VERSION_UPGRADE" ]; then
-                      MAJOR_VERSION=$(($MAJOR_VERSION+1))
-                    elif [ "minor" == "$VERSION_UPGRADE" ]; then
-                      MINOR_VERSION=$(($MINOR_VERSION+1))
-                    fi
-
-                    echo BUILD_VERSION = "$MAJOR_VERSION.$MINOR_VERSION.$BUILD_NUMBER"
-
-                    echo "$MAJOR_VERSION.$MINOR_VERSION.$BUILD_NUMBER" > version
-                "
+                sh './version_upgrade.sh'
                 git config --global user.name "Jenkins Provider"
                 git config --global user.email "jenkins@localhost:8080"
                 sh "git add version"
