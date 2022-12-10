@@ -27,8 +27,8 @@ pipeline {
             steps {
                 echo 'Version Upgrade'
                 sh './version_upgrade.sh'
-                git config --global user.name "Jenkins Provider"
-                git config --global user.email "jenkins@localhost:8080"
+                sh 'git config --global user.name "Jenkins Provider"'
+                sh 'git config --global user.email "jenkins@localhost:8080"'
                 sh "git add version"
                 sh 'git commit -m "Jenkins Production Build $BUILD_NUMBER"'
                 sh 'git push'
